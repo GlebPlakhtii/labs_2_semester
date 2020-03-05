@@ -48,7 +48,7 @@ public:
 
     friend ostream &operator<<(ostream &os, const Queue &nd);
 
-    friend istream &operator>>(istream &is, Queue::Node &ns);
+    friend istream &operator>>(istream &is, Queue::Node &ns); 
 
 
     Queue() {

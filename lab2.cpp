@@ -4,6 +4,8 @@
 using namespace std;
 
 class Queue {
+    int size;
+
     class Node {
     public:
 
@@ -19,8 +21,13 @@ class Queue {
             cout << this->data << endl;
         }
 
+        string get_data() {
+            return this->data;
+        }
+
 
     };
+
 
     void remove_element() {
         if (this->head != nullptr) {
@@ -33,10 +40,24 @@ class Queue {
         this->size--;
     }
 
-    Node *head;
-    int size;
+
 
 public:
+    Node *head;
+
+    Queue(const Queue &that){
+
+        Node *current = that.head;
+        this->size=0;
+
+        while (current) {
+            this->push_back(current->get_data());
+            current = current->next;
+            this->size++;
+
+        }
+
+    }
 
 
     Queue() {
@@ -85,17 +106,15 @@ public:
 
 
     ~Queue() {
-        Node *current = this->head;
-
-        while (current->next != nullptr) {
-            Node *tmp = current;
-            current = current->next;
-
-            delete tmp;
-
-
+        Node *tmp;
+        while (this->head) {
+            tmp = this->head->next;
+            delete this->head;
+            this->head = tmp;
+            this->size--;
         }
-    }
+    };
+
 };
 
 
@@ -107,19 +126,23 @@ int main() {
     test.push_back("d");
     test.push_back("e");
 
-    test.print_whole();
-    cout << endl << endl;
+
+    Queue q(test);
+    q.print_whole();
+//
+//    test.print_whole();
+//    cout << endl << endl;
+//
+//
+//    test.get_size();
+//
+//    test.remove_elements(2);
+//
+//    test.get_size();
 
 
-    test.get_size();
-
-    test.remove_elements(2);
-
-    test.get_size();
-
-
-    cout << endl << endl;
-    test.print_whole();
+//    cout << endl << endl;
+//    test.print_whole();
 
 
     return 0;
