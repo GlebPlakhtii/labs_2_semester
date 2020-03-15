@@ -1,136 +1,123 @@
 #include <iostream>
+
+#define _USE_MATH_DEFINES
+
+#include <cmath>
+
 #include <string>
 
 using namespace std;
 
-class Queue {
-    class Node {
-    public:
 
-        string data;
-        Node *next;
+class Circle {
+protected:
+    double *center;
+    double radius;
 
-        Node(string data = "empty") {
-            this->data = data;
-            this->next = nullptr;
-        }
-
-        void print_data() {
-            cout << this->data << endl;
-        }
-
-        string get_data() {
-            return this->data;
-        }
-
-
-    };
-
-
-    void remove_element() {
-        if (this->head != nullptr) {
-            Node *tmp = this->head;
-            this->head = this->head->next;
-            delete tmp;
-        } else {
-            cout << "queue is empty" << endl;
-        }
-        this->size--;
-    }
-
-
-    int size;
 
 public:
-    Node *head;
+    Circle(double x = 0, double y = 0, double radius = 0) {
+        this->center = new double[2];
+        this->center[0] = x;
+        this->center[1] = y;
 
-    friend ostream &operator<<(ostream &os, const Node &nd);
+        this->radius = radius;
+    }
 
-    friend ostream &operator<<(ostream &os, const Queue &nd);
-
-    friend istream &operator>>(istream &is, Queue::Node &ns); 
-
-
-    Queue() {
-        this->size = 0;
-        this->head = nullptr;
+    Circle(const Circle &other) {
+        this->center = new double[2];
+        this->center[0] = other.center[0];
+        this->center[1] = other.center[1];
+        this->radius = other.radius;
 
     }
 
-    void push_back(string data) {
-        if (this->head == nullptr) {
-            this->head = new Node(data);
-        } else {
-            Node *current = this->head;
-            while (current->next != nullptr) {
-                current = current->next;
-            }
-            current->next = new Node(data);
-        }
-        this->size++;
-    }
-
-
-    int get_size() {
-
-        return this->size;
-    }
-
-
-    void remove_elements(int quantity = 1) {
-        for (int i = 0; i < quantity; ++i) {
-            remove_element();
-
-        }
+    ~Circle() {
+        delete[] this->center;
 
     }
 
+    double square() {
+        return M_PI * pow(this->radius, 2);
+    }
 
-    ~Queue() {
-        Node *tmp;
-        while (this->head) {
-            tmp = this->head->next;
-            delete this->head;
-            this->head = tmp;
-            this->size--;
-        }
-    };
+    double length() {
+        return M_PI * 2 * this->radius;
+    }
+
+    void change_circle(double x, double y, double radius) {
+        this->center[0] = x;
+        this->center[1] = y;
+
+        this->radius = radius;
+    }
+
+    void print_info() {
+        cout << "radius : " << this->radius << "\ncenter : ( " << this->center[0] << " , " << this->center[1] << " )\n";
+    }
+
+    bool is_larger_area(double area) {
+        return this->square() > area;
+    }
 
 
 };
 
-ostream &operator<<(ostream &os, const Queue::Node &nd) {
-    os << nd.data;
-    return os;
-}
+class ColorCircle : public Circle {
+    string color;
+public:
 
-ostream &operator<<(ostream &os, const Queue &nd) {
-    Queue::Node *current = nd.head;
+    ColorCircle(double x=0, double y=0, double radius=0, string color = "") : Circle(x, y, radius) {
+        this->color = color;
+    }
 
-    while (current) {
-        os << *current << endl;
-        current = current->next;
+    void print_info() {
+        cout << "radius : " << this->radius << "\ncenter : ( " << this->center[0] << " , " << this->center[1]
+             << " )\ncolor : " << this->color << endl;
+    }
+
+
+    ColorCircle operator=(const ColorCircle &other) {
+        this->~ColorCircle();
+        this->center = new double[2];
+        this->center[0] = other.center[0];
+        this->center[1] = other.center[1];
+        this->radius = other.radius;
+        this->color = other.color;
+
 
     }
+
+
+    double operator+(const ColorCircle &other) {
+        return (pow(this->radius, 2) + pow(other.radius, 2)) * M_PI;
+
+    }
+
+    friend ostream &operator<<(ostream &os, ColorCircle &c);
+
+    friend istream &operator>>(istream &is, ColorCircle &c);
+
+
+};
+
+ostream &operator<<(ostream &os, ColorCircle &c) {
+    os << "radius : " << c.radius << "\ncenter : ( " << c.center[0] << " , " << c.center[1]
+       << " )\ncolor : " << c.color << endl;
     return os;
 }
 
-istream &operator>>(istream &is, Queue::Node &ns) {
-    is >> ns.data;
+istream &operator>>(istream &is, ColorCircle &c) {
+    is >> c.center[0] >> c.center[1] >> c.radius >> c.color;
     return is;
 }
 
 
 int main() {
-    Queue test;
-    test.push_back("a");
-    test.push_back("b");
-    test.push_back("c");
-    test.push_back("d");
-    test.push_back("e");
-    cin >> *test.head;
-    cout << endl << endl;
-    cout << test << endl;
+    ColorCircle c;
+    cout<<"enter : double x ,double y ,double radius ,strings color :"<<endl;
+    cin >> c;
+    cout << c << endl;
 
 
     return 0;
