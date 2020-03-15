@@ -1,148 +1,85 @@
 #include <iostream>
+
+#define _USE_MATH_DEFINES
+
+#include <cmath>
+
 #include <string>
 
 using namespace std;
 
-class Queue {
-    int size;
 
-    class Node {
-    public:
-
-        string data;
-        Node *next;
-
-        Node(string data = "empty") {
-            this->data = data;
-            this->next = nullptr;
-        }
-
-        void print_data() {
-            cout << this->data << endl;
-        }
-
-        string get_data() {
-            return this->data;
-        }
-
-
-    };
-
-
-    void remove_element() {
-        if (this->head != nullptr) {
-            Node *tmp = this->head;
-            this->head = this->head->next;
-            delete tmp;
-        } else {
-            cout << "queue is empty" << endl;
-        }
-        this->size--;
-    }
-
+class Circle {
+protected:
+    double *center;
+    double radius;
 
 
 public:
-    Node *head;
+    Circle(double x = 0, double y = 0, double radius = 0) {
+        this->center = new double[2];
+        this->center[0] = x;
+        this->center[1] = y;
 
-    Queue(const Queue &that){
+        this->radius = radius;
+    }
 
-        Node *current = that.head;
-        this->size=0;
-
-        while (current) {
-            this->push_back(current->get_data());
-            current = current->next;
-            this->size++;
-
-        }
+    Circle(const Circle &other) {
+        this->center = new double[2];
+        this->center[0] = other.center[0];
+        this->center[1] = other.center[1];
+        this->radius = other.radius;
 
     }
 
-
-    Queue() {
-        this->size = 0;
-        this->head = nullptr;
+    ~Circle() {
+        delete[] this->center;
 
     }
 
-    void push_back(string data) {
-        if (this->head == nullptr) {
-            this->head = new Node(data);
-        } else {
-            Node *current = this->head;
-            while (current->next != nullptr) {
-                current = current->next;
-            }
-            current->next = new Node(data);
-        }
-        this->size++;
+    double square() {
+        return M_PI * pow(this->radius, 2);
     }
 
-    void print_whole() {
-        Node *current = this->head;
-        current->print_data();
-        while (current->next != nullptr) {
-            current = current->next;
-            current->print_data();
-
-
-        }
+    double length() {
+        return M_PI * 2 * this->radius;
     }
 
-    int get_size() {
+    void change_circle(double x, double y, double radius) {
+        this->center[0] = x;
+        this->center[1] = y;
 
-        return this->size;
+        this->radius = radius;
     }
 
-
-    void remove_elements(int quantity = 1) {
-        for (int i = 0; i < quantity; ++i) {
-            remove_element();
-
-        }
-
+    void print_info() {
+        cout << "radius : " << this->radius << "\ncenter : ( " << this->center[0] << " , " << this->center[1] << " )\n";
     }
 
+    bool is_larger_area(double area) {
+        return this->square() > area;
+    }
+};
 
-    ~Queue() {
-        Node *tmp;
-        while (this->head) {
-            tmp = this->head->next;
-            delete this->head;
-            this->head = tmp;
-            this->size--;
-        }
-    };
+class ColorCircle : public Circle {
+    string color;
+public:
+
+    ColorCircle(double x, double y, double radius, string color) : Circle(x, y, radius) {
+        this->color = color;
+    }
+
+    void print_info() {
+        cout << "radius : " << this->radius << "\ncenter : ( " << this->center[0] << " , " << this->center[1]
+             << " )\ncolor : " << this->color << endl;
+    }
+
 
 };
 
-
 int main() {
-    Queue test;
-    test.push_back("a");
-    test.push_back("b");
-    test.push_back("c");
-    test.push_back("d");
-    test.push_back("e");
-
-
-    Queue q(test);
-    q.print_whole();
-//
-//    test.print_whole();
-//    cout << endl << endl;
-//
-//
-//    test.get_size();
-//
-//    test.remove_elements(2);
-//
-//    test.get_size();
-
-
-//    cout << endl << endl;
-//    test.print_whole();
+    ColorCircle a(1, 2, 1, "red");
+    a.print_info();
 
 
     return 0;
