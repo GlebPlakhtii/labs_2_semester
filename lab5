@@ -1,0 +1,108 @@
+#include <iostream>
+
+#define _USE_MATH_DEFINES
+
+#include <cmath>
+
+#include <string>
+
+using namespace std;
+
+template <class T> class Circle {
+protected:
+    T *center;
+    T radius;
+
+
+public:
+    Circle(T x = 0, T y = 0, T radius = 0) {
+        this->center = new T[2];
+        this->center[0] = x;
+        this->center[1] = y;
+
+        this->radius = radius;
+    }
+
+    Circle(const Circle &other) {
+        this->center = new T[2];
+        this->center[0] = other.center[0];
+        this->center[1] = other.center[1];
+        this->radius = other.radius;
+
+    }
+
+    ~Circle() {
+        delete[] this->center;
+
+    }
+
+    double square() {
+        return M_PI * pow(this->radius, 2);
+    }
+
+    double length() {
+        return M_PI * 2 * this->radius;
+    }
+
+    void change_circle(T x, T y, T radius) {
+        this->center[0] = x;
+        this->center[1] = y;
+
+        this->radius = radius;
+    }
+
+    virtual void print_info() {
+        cout << "radius : " << this->radius << "\ncenter : ( " << this->center[0] << " , " << this->center[1] << " )\n";
+    }
+
+    bool is_larger_area(double area) {
+        return this->square() > area;
+    }
+
+
+};
+template <class T>
+class ColorCircle : public Circle<T> {
+    string color;
+public:
+
+    ColorCircle(T x, T y, T radius, const string &color = "") : Circle<T>(x,  y, radius) {
+        this->color = color;
+    }
+
+    void print_info() override {
+        cout << "radius : " << this->radius << "\ncenter : ( " << this->center[0] << " , " << this->center[1]
+             << " )\ncolor : " << this->color << endl;
+    }
+
+
+    ColorCircle& operator=(const ColorCircle &other) {
+        this->~ColorCircle();
+        this->center = new T[2];
+        this->center[0] = other.center[0];
+        this->center[1] = other.center[1];
+        this->radius = other.radius;
+        this->color = other.color;
+
+
+    }
+
+
+
+    double operator+(const ColorCircle &other) {
+        return (pow(this->radius, 2) + pow(other.radius, 2)) * M_PI;
+
+    }
+
+
+};
+
+int main() {
+    ColorCircle <int> a(1, 2, 1, "red");
+    ColorCircle <int >b(a);
+    b.print_info();
+    cout << (a + b) << endl;
+
+
+    return 0;
+}
